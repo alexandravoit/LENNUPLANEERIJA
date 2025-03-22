@@ -8,6 +8,8 @@
 
     <img src="@/assets/plane.svg" class="plane"/>
 
+    <FlightSearch />
+
   </div>
 
 
@@ -15,9 +17,15 @@
 
 <script>
 // import axios from 'axios';
+import FlightSearch from './components/FlightSearch.vue';
+
 
 export default {
   name: 'App',
+
+  components: {
+    FlightSearch,
+  },
 
   data() {
 
@@ -43,13 +51,13 @@ export default {
 
 * {
   font-family: 'Akira', sans-serif;
-  background: black;
   color: white;
   margin: 0;
   box-sizing: border-box;
 }
 
 .app {
+  background: black;
   border: solid 1px;
   display: flex;
   flex-direction: column;
@@ -58,6 +66,7 @@ export default {
 }
 
 .header {
+  margin-top: 1vh;
   display: flex;
   flex-direction: row;
   font-size: 4vw;
