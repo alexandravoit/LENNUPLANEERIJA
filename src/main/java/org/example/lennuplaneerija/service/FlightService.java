@@ -1,27 +1,31 @@
 package org.example.lennuplaneerija.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.lennuplaneerija.dto.FlightDTO;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /*
     SELLE KLASSI ja ÜLDISE BACKEND STRUKTUURI PÜSTITAMISEL SAIN ABI
         - YOUTUBE'I KANALITEST: Java Technology Learning &  atquil
         - CHATGPT: Abi HttpEntity ja JsonNode'ide üles seadmisega
  */
+
 @Service
 public class FlightService {
-    private final RestTemplate restTemplate;
+
+    private final List<String> airlines =
+            List.of("Aeroflot", "Turkish Air", "AirBaltic", "Lufthansa", "Eesti Lennukompanii", "Wizzair");
+    private final Random random = new Random();
+
+    // SAIN API-ga TÖÖLE, AGA KAHJUKS API VALIK OLI VEIDI KESINE NING LÕPPTULEMUSE KVALITEEDI HUVIDES
+    // OTSUSTASIN LENNUD ISE GENEREERIDA
+
+   /* private final RestTemplate restTemplate;
     private final String APIurl = "https://blue-scanner.p.rapidapi.com/skyscanner-app/flights/search-roundtrip";
     private final String APIkey = "0156f1295emsh6f5739d7cab54c1p1c39b8jsn62e333b19d7a";
     private final ObjectMapper objectMapper;
@@ -65,5 +69,47 @@ public class FlightService {
 
         return flights;
 
+    }*/
+
+    public List<FlightDTO> fetchFlights(String origin, String destination) {
+
+        List<FlightDTO> flights = new ArrayList<>();
+        int nrOfFlights = 15;
+
+        for (int i = 0; i < nrOfFlights; i++) {
+            FlightDTO flight = new FlightDTO();
+
+            flight.setOrigin(origin);
+            flight.setDestination(destination);
+            flight.setAirline(airlines.get(random.nextInt(airlines.size())));
+
+            LocalDateTime departureDate = generateRandomDateTime();
+            flight.setDeparture(departureDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+            LocalDateTime arrivalDate = departureDate.plusHours(1 + random.nextInt(10));
+            flight.setArrival(arrivalDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+            flight.setPrice(generateRandomPrice());
+
+            double duration = java.time.Duration.between(departureDate, arrivalDate).toMinutes();
+            flight.setDuration(duration);
+
+            flights.add(flight);
+        }
+
+        return flights;
+
+    }
+
+
+    private double generateRandomPrice() {
+        return 100 + (2000 - 100) * random.nextDouble();
+    }
+
+    private LocalDateTime generateRandomDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.plusDays(random.nextInt(31))
+                .plusHours(random.nextInt(24))
+                .plusMinutes(random.nextInt(60));
     }
 }
