@@ -5,4 +5,39 @@ public class SeatDTO {
     private int seat;
     private String type; // Economy, business
     private boolean available;
+
+    public SeatDTO() {
+    }
+
+    public void setRow(String row) {
+        this.row = row;
+    }
+
+    public void setSeat(int seat) {
+        this.seat = seat;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public String getRow() {
+        return row;
+    }
+
+    public int getSeat() {
+        return seat;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
 }
