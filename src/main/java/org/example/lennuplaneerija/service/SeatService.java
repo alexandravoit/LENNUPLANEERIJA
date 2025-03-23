@@ -10,5 +10,8 @@ public class SeatService {
 
     public List<SeatDTO> fetchSeats() {
         return null;
+        // [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        // [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        // [jne] [jne]
     }
 }
