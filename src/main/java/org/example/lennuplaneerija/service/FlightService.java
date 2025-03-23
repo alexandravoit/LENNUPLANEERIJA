@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.round;
+
 /*
     SELLE KLASSI ja ÜLDISE BACKEND STRUKTUURI PÜSTITAMISEL SAIN ABI
         - YOUTUBE'I KANALITEST: Java Technology Learning &  atquil
@@ -18,8 +20,8 @@ import java.util.Random;
 @Service
 public class FlightService {
 
-    private final List<String> airlines =
-            List.of("Aeroflot", "Turkish Air", "AirBaltic", "Lufthansa", "Eesti Lennukompanii", "Wizzair");
+    private final List<String> airlines = List.of("Aeroflot", "Turkish Air", "AirBaltic", "Lufthansa", "EELEND", "Wizzair");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' kell 'HH:mm");
     private final Random random = new Random();
 
     // SAIN API-ga TÖÖLE, AGA KAHJUKS API VALIK OLI VEIDI KESINE NING LÕPPTULEMUSE KVALITEEDI HUVIDES
@@ -84,12 +86,12 @@ public class FlightService {
             flight.setAirline(airlines.get(random.nextInt(airlines.size())));
 
             LocalDateTime departureDate = generateRandomDateTime();
-            flight.setDeparture(departureDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            flight.setDeparture(departureDate.format(formatter));
 
             LocalDateTime arrivalDate = departureDate.plusHours(1 + random.nextInt(10));
-            flight.setArrival(arrivalDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            flight.setArrival(arrivalDate.format(formatter));
 
-            flight.setPrice(generateRandomPrice());
+            flight.setPrice(Math.round(generateRandomPrice()));
 
             double duration = java.time.Duration.between(departureDate, arrivalDate).toMinutes();
             flight.setDuration(duration);
@@ -103,7 +105,7 @@ public class FlightService {
 
 
     private double generateRandomPrice() {
-        return 100 + (2000 - 100) * random.nextDouble();
+        return 100 + (500 - 100) * random.nextDouble();
     }
 
     private LocalDateTime generateRandomDateTime() {
