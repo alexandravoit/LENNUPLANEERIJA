@@ -23,9 +23,9 @@
             </option>
           </select>
         </div>
+      </div>
 
     </div>
-  </div>
 
     <button @click="searchFlights" class="otsi">OTSI</button>
 
@@ -61,8 +61,8 @@
       </div>
 
     </div>
-
   </div>
+
 </template>
 
 <script>
@@ -161,6 +161,7 @@ export default {
     padding: 2vw;
     border: #00FF92 1px solid;
     border-radius: 15px;
+    width: 54vw;
   }
 
   .parameters {
@@ -173,7 +174,6 @@ export default {
     background-color: #00FF92;
     border-radius: 15px;
     width: 47vw;
-    margin-bottom: 2vw;
   }
 
   .parameters p {
@@ -212,6 +212,7 @@ export default {
     display: flex;
     flex-direction: column;
     font-size: 1vw;
+    margin-top: 2vw;
   }
 
   .flight-results table {

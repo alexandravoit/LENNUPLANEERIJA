@@ -13,10 +13,10 @@ public class SeatService {
 
     private final Random random = new Random();
 
-    public List<SeatDTO> fetchSeats() {
+    public List<List<SeatDTO>> fetchSeats() {
 
-        // [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
-        // [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        // [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]] ESIMENE BLOKK
+        // [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]] TEINE BLOKK
         // [jne] [jne]
 
         List<SeatDTO> seats = new ArrayList<>();
@@ -43,11 +43,60 @@ public class SeatService {
             }
         }
 
-        return seats;
+        return groupSeatsIntoBlocks(seats);
+    }
+
+    private List<List<SeatDTO>> groupSeatsIntoBlocks(List<SeatDTO> allSeats) {
+        List<List<SeatDTO>> blocks = new ArrayList<>();
+
+        int seatsPerBlockRow = 3;
+        int rowsPerBlock = 4;
+
+        String[] rows = {"A", "B", "C", "D", "E", "F", "G", "H"};
+
+
+        for (int rowStart = 0; rowStart < rows.length; rowStart += rowsPerBlock) {
+
+
+            for (int seatStart = 0; seatStart < 6; seatStart += seatsPerBlockRow) {
+                List<SeatDTO> block = new ArrayList<>();
+
+
+                for (int rowOffset = 0; rowOffset < rowsPerBlock; rowOffset++) {
+                    String row = rows[rowStart + rowOffset];
+
+
+                    for (int seatOffset = 0; seatOffset < seatsPerBlockRow; seatOffset++) {
+                        int seatNumber = seatStart + seatOffset + 1;
+                        SeatDTO seat = findSeat(allSeats, row, seatNumber);
+                        if (seat != null) {
+                            block.add(seat);
+                        }
+                    }
+                }
+
+                blocks.add(block);
+            }
+        }
+
+        return blocks;
+    }
+
+    private SeatDTO findSeat(List<SeatDTO> allSeats, String row, int seatNumber) {
+        for (SeatDTO seat : allSeats) {
+            if (seat.getRow().equals(row) && seat.getSeat() == seatNumber) {
+                return seat;
+            }
+        }
+        return null;
     }
 
     private boolean isSeatAvailable() {
         return random.nextDouble() > 0.1;
     }
+
+
+
+
 
 }

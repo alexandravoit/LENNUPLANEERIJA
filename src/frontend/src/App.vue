@@ -6,9 +6,11 @@
     </div>
     <h2 class="subheader">KOIGE SWAGIM LENNUPLANEERIJA</h2>
 
-    <img src="@/assets/plane.svg" class="plane"/>
+    <img src="@/assets/plane.svg" class="plane" alt="plane icon" />
 
     <FlightSearch />
+
+    <SeatSearch />
 
   </div>
 
@@ -16,8 +18,8 @@
 </template>
 
 <script>
-// import axios from 'axios';
 import FlightSearch from './components/FlightSearch.vue';
+import SeatSearch from './components/SeatSearch.vue';
 
 
 export default {
@@ -25,6 +27,7 @@ export default {
 
   components: {
     FlightSearch,
+    SeatSearch,
   },
 
   data() {

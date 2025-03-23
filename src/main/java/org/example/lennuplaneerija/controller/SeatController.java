@@ -15,7 +15,7 @@ public class SeatController {
     private SeatService seatService;
 
     @GetMapping("/seats")
-    public List<SeatDTO> getSeats() {
+    public List<List<SeatDTO>> getSeats() {
         try {
             return seatService.fetchSeats();
         } catch (Exception e) {
