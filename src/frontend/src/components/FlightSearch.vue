@@ -101,7 +101,6 @@ export default {
       to: "LON",
       flights: [],
       filteredFlights: [],
-      //displayedFlights: [],
       error: "",
       destinations: [
         { code: "LON" },
@@ -125,6 +124,9 @@ export default {
   methods: {
     async searchFlights() {
       this.error = "";
+      this.selectedDate = "";
+      this.selectedPriceRange = "";
+      this.filteredFlights = []
 
       try {
 
