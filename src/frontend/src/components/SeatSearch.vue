@@ -16,6 +16,15 @@
         <h1> VALIK </h1>
       </div>
 
+      <h1 class="pref-header">EELISTUS:</h1>
+
+      <select v-model="pref" @change="fetchFlightsWithFilters" class="filter-select">
+        <option value="">KORVUTI</option>
+        <option v-for="pref in prefChoices" :key="pref" :value="pref">
+          {{ pref }}
+        </option>
+      </select>
+
 
 
     </div>
@@ -34,7 +43,14 @@ export default {
     return {
       seats: [],
       error: "",
+      pref: "",
+      prefChoices: ["ARIKLASS", "AKEN", "KORIDOR"],
+
     };
+  },
+  props: {
+    flight: Object,
+    passengerCount: Number,
   },
   methods: {
     async searchSeats() {
@@ -110,12 +126,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin:
 }
 
 .seat-header {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-bottom: 1vw;
 }
 
 .seat-header h1 {
@@ -123,6 +141,20 @@ export default {
   font-size: 3vw;
 }
 
+.filter-select {
+  background-color: #000000;
+  border-radius: 5px;
+  padding: 0.5vw;
+  color: #00ff92;
+  font-size: 2.7vw;
+  margin-top: 1vw;
+}
+
+.pref-header {
+  font-size: 3vw;
+  -webkit-text-stroke: 1px #00ff92;
+  color: black;
+}
 
 
 </style>
