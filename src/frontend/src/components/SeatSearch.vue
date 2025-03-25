@@ -1,15 +1,23 @@
 <template>
   <div class="container">
 
-    <h1> ISTEKOHTADE VALIK </h1>
-    <button @click="searchSeats"></button>
-
     <div class="grid-container">
       <div v-for="(block, index) in seats" :key="index" class="block">
         <div v-for="seat in block" :key="seat.row + seat.seat" class="seat" :class="{ available: seat.available }">
           {{ seat.row }}{{ seat.seat }}
         </div>
       </div>
+    </div>
+
+    <div class="selection">
+
+      <div class="seat-header">
+        <h1> ISTEKOHTADE </h1>
+        <h1> VALIK </h1>
+      </div>
+
+
+
     </div>
 
   </div>
@@ -45,6 +53,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.searchSeats();
+  },
 };
 
 </script>
@@ -53,11 +64,11 @@ export default {
 
 .container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px white solid;
-  width: 54vw;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 2vw;
+  padding: 1vw;
+  width: 74vw;
 }
 
 .grid-container {
@@ -95,6 +106,22 @@ export default {
   background-color: #000000;
 }
 
+.selection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.seat-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.seat-header h1 {
+  color: #00ff92;
+  font-size: 3vw;
+}
 
 
 

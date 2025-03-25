@@ -32,9 +32,35 @@
     <div class="search">
 
       <div class="parameters">
-        <p>KUUPAEV</p>
-        <p>HIND</p>
-        <p>REISIJAID</p>
+        <div class="filter-group">
+          <p>KUUPAEV</p>
+          <select v-model="selectedDate" @change="fetchFlightsWithFilters" class="filter-select">
+            <option value="">KUUPAEVAD</option>
+            <option v-for="date in availableDates" :key="date" :value="date">
+              {{ date }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <p>HIND</p>
+          <select v-model="selectedPriceRange" @change="fetchFlightsWithFilters" class="filter-select">
+            <option value="">HINNAD</option>
+            <option value="100-250">100 - 250€</option>
+            <option value="250-500">250 - 500€</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <p>REISIJAID</p>
+          <select v-model="passengerCount" class="filter-select">
+            <option v-for="nr in passengerOptions" :value="nr" :key="nr">
+              {{ nr }}
+            </option>
+          </select>
+        </div>
+
+
       </div>
 
       <div class="flight-results" v-if="flights.length > 0">
@@ -49,7 +75,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="flight in flights" :key="flight.departure + flight.arrival">
+          <tr v-for="flight in displayedFlights" :key="flight.departure + flight.arrival">
             <td>{{ flight.airline }}</td>
             <td>{{ flight.departure }}</td>
             <td>{{ flight.arrival }}</td>
@@ -74,6 +100,8 @@ export default {
       from: "NYC",
       to: "LON",
       flights: [],
+      filteredFlights: [],
+      displayedFlights: [],
       error: "",
       destinations: [
         { code: "LON" },
@@ -82,7 +110,17 @@ export default {
         { code: "HEL" },
         { code: "AMS" },
       ],
+      selectedDate: "",
+      selectedPriceRange: "",
+      passengerCount: 1,
+      passengerOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      availableDates: [],
     };
+  },
+  computed: {
+    displayedFlights() {
+      return this.filteredFlights.length > 0 ? this.filteredFlights : this.flights;
+    }
   },
   methods: {
     async searchFlights() {
@@ -102,6 +140,26 @@ export default {
 
       } catch (err) {
         this.error = "Failed to fetch flights. Please try again later.";
+        console.error("API Error:", err);
+      }
+    },
+
+    async fetchFlightsWithFilters() {
+      this.error = "";
+
+      try {
+        const response = await axios.post("http://localhost:8081/api/flights/filter", {
+          flights: this.flights,
+          date: this.selectedDate,
+          priceRange: this.selectedPriceRange
+        });
+
+
+        console.log(response.data);
+        this.filteredFlights = response.data;
+
+      } catch (err) {
+        this.error = "Failed to fetch filtered flights. Please try again later.";
         console.error("API Error:", err);
       }
     },
@@ -239,6 +297,21 @@ export default {
 
   .flight-results tr:hover td {
     color: black;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1vw;
+  }
+
+  .filter-select {
+    background-color: #000000;
+    border-radius: 5px;
+    padding: 0.5vw;
+    color: #00ff92;
+    font-size: 1vw;
   }
 
 

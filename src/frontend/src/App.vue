@@ -99,7 +99,7 @@ export default {
 
 @keyframes float {
   0% { transform: translateY(0) }
-  50% { transform: translateY(-1vh) }
+  50% { transform: translateY(-3vh) }
   100% { transform: translateY(0) }
 }
 

@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.round;
 
@@ -114,4 +115,25 @@ public class FlightService {
                 .plusHours(random.nextInt(24))
                 .plusMinutes(random.nextInt(60));
     }
+
+    public List<FlightDTO> filterByDate(List<FlightDTO> flights, String date) {
+        if (date == null || date.isEmpty()) return flights;
+        return flights.stream()
+                .filter(flight -> flight.getDeparture().equals(date))
+                .collect(Collectors.toList());
+    }
+
+    public List<FlightDTO> filterByPriceRange(List<FlightDTO> flights, String priceRange) {
+        if (priceRange == null || priceRange.isEmpty()) return flights;
+
+        String[] parts = priceRange.split("-");
+        int min = Integer.parseInt(parts[0]);
+        int max = Integer.parseInt(parts[1]);
+
+        return flights.stream()
+                .filter(flight -> flight.getPrice() >= min && flight.getPrice() <= max)
+                .collect(Collectors.toList());
+    }
+
+
 }
