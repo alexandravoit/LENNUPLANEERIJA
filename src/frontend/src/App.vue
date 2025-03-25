@@ -8,9 +8,16 @@
 
     <img src="@/assets/plane.svg" class="plane" alt="plane icon" />
 
-    <FlightSearch />
+    <FlightSearch
+        @flight-selected="handleFlightSelection"
+        @reset-seating="resetSeating"
+    />
 
-    <SeatSearch />
+    <SeatSearch
+        v-if="showSeating"
+        :flight="selectedFlight"
+        :passengerCount="passengerCount"
+    />
 
   </div>
 
@@ -31,13 +38,26 @@ export default {
   },
 
   data() {
-
+    return {
+      selectedFlight: null,
+      passengerCount: 1,
+      showSeating: false,
+    };
   },
 
   created() {
   },
   methods: {
+    handleFlightSelection({ flight, passengers }) {
+      this.selectedFlight = flight;
+      this.passengerCount = passengers;
+      this.showSeating = true;
+    },
 
+    resetSeating() {
+      this.selectedFlight = null;
+      this.showSeating = false;
+    },
   }
 
 }

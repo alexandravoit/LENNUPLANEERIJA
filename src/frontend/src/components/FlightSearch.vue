@@ -75,7 +75,10 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="flight in displayedFlights" :key="flight.departure + flight.arrival">
+          <tr v-for="flight in displayedFlights"
+              :key="flight.departure + flight.arrival"
+              @click="selectFlight(flight)"
+              :class="{ 'selected-flight': flight === selectedFlight }" >
             <td>{{ flight.airline }}</td>
             <td>{{ flight.departure }}</td>
             <td>{{ flight.arrival }}</td>
@@ -112,8 +115,10 @@ export default {
       selectedDate: "",
       selectedPriceRange: "",
       passengerCount: 1,
+      selectedFlight: null,
       passengerOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       availableDates: [],
+      showSeating: false,
     };
   },
   computed: {
@@ -126,7 +131,11 @@ export default {
       this.error = "";
       this.selectedDate = "";
       this.selectedPriceRange = "";
+      this.passengerCount = 1;
+      this.selectedFlight = null;
+      this.showSeating = false;
       this.filteredFlights = []
+      this.$emit("reset-seating");
 
       try {
 
@@ -167,6 +176,12 @@ export default {
         this.error = "Failed to fetch filtered flights. Please try again later.";
         console.error("API Error:", err);
       }
+    },
+
+    async selectFlight(flight) {
+      this.selectedFlight = flight;
+      this.showSeating = true;
+      this.$emit("flight-selected", { flight, passengers: this.passengerCount });
     },
   },
 };
@@ -317,6 +332,15 @@ export default {
     padding: 0.5vw;
     color: #00ff92;
     font-size: 1vw;
+  }
+
+  .selected-flight {
+    background-color: #00FF92 !important;
+  }
+
+  .selected-flight td {
+    color: black !important;
+    font-weight: bold;
   }
 
 
