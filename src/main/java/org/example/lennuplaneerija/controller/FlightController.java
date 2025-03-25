@@ -1,12 +1,14 @@
 package org.example.lennuplaneerija.controller;
 
 import org.example.lennuplaneerija.dto.FlightDTO;
+import org.example.lennuplaneerija.dto.FlightResponseDTO;
 import org.example.lennuplaneerija.dto.RequestDTO;
 import org.example.lennuplaneerija.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -17,11 +19,20 @@ public class FlightController {
     private FlightService flightService;
 
     @GetMapping("/flights")
-    public List<FlightDTO> getFlights(
+    public FlightResponseDTO getFlights(
             @RequestParam("originSkyId") String origin,
             @RequestParam("destinationSkyId") String destination) {
         try {
-            return flightService.fetchFlights(origin, destination);
+            List<FlightDTO> flights = flightService.fetchFlights(origin, destination);
+
+            List<String> uniqueDates = flights.stream()
+                    .map(flight -> flight.getDeparture().split(" kell ")[0])
+                    .distinct()
+                    .sorted()
+                    .collect(Collectors.toList());
+
+            return new FlightResponseDTO(flights, uniqueDates);
+
         } catch (Exception e) {
             return null;
         }

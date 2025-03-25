@@ -119,7 +119,7 @@ public class FlightService {
     public List<FlightDTO> filterByDate(List<FlightDTO> flights, String date) {
         if (date == null || date.isEmpty()) return flights;
         return flights.stream()
-                .filter(flight -> flight.getDeparture().equals(date))
+                .filter(flight -> flight.getDeparture().split(" kell ")[0].equals(date))
                 .collect(Collectors.toList());
     }
 

@@ -101,7 +101,7 @@ export default {
       to: "LON",
       flights: [],
       filteredFlights: [],
-      displayedFlights: [],
+      //displayedFlights: [],
       error: "",
       destinations: [
         { code: "LON" },
@@ -120,7 +120,7 @@ export default {
   computed: {
     displayedFlights() {
       return this.filteredFlights.length > 0 ? this.filteredFlights : this.flights;
-    }
+    },
   },
   methods: {
     async searchFlights() {
@@ -135,8 +135,11 @@ export default {
           },
         });
 
-        console.log(response.data);
-        this.flights = response.data;
+        const data = response.data;
+        const flights = data.flights;
+        const availableDates = data.availableDates;
+        this.flights = flights;
+        this.availableDates = availableDates;
 
       } catch (err) {
         this.error = "Failed to fetch flights. Please try again later.";
