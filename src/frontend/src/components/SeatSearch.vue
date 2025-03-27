@@ -58,7 +58,7 @@ export default {
 
       try {
 
-        const response = await axios.get("http://localhost:8081/api/seats");
+        const response = await axios.get("http://localhost:9090/api/seats");
 
         console.log(response.data);
         this.seats = response.data;
@@ -126,7 +126,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin:
 }
 
 .seat-header {

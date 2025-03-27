@@ -139,7 +139,7 @@ export default {
 
       try {
 
-        const response = await axios.get("http://localhost:8081/api/flights", {
+        const response = await axios.get("http://localhost:9090/api/flights", {
           params: {
             originSkyId: this.from,
             destinationSkyId: this.to,
@@ -162,7 +162,7 @@ export default {
       this.error = "";
 
       try {
-        const response = await axios.post("http://localhost:8081/api/flights/filter", {
+        const response = await axios.post("http://localhost:9090/api/flights/filter", {
           flights: this.flights,
           date: this.selectedDate,
           priceRange: this.selectedPriceRange
