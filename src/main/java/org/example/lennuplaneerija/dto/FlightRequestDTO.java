@@ -2,12 +2,12 @@ package org.example.lennuplaneerija.dto;
 
 import java.util.List;
 
-public class RequestDTO {
+public class FlightRequestDTO {
     private List<FlightDTO> flights;
     private String date;
     private String priceRange;
 
-    public RequestDTO() {
+    public FlightRequestDTO() {
     }
     
     public List<FlightDTO> getFlights() { return flights; }

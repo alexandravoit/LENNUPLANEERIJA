@@ -3,10 +3,8 @@ package org.example.lennuplaneerija.service;
 import org.example.lennuplaneerija.dto.SeatDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SeatService {
@@ -95,7 +93,76 @@ public class SeatService {
         return random.nextDouble() > 0.1;
     }
 
+    public List<List<SeatDTO>> fetchSeatSelection(List<List<SeatDTO>> seatBlocks, String pref, int passengers) {
+        // pref saab olla: "ARIKLASS", "AKEN", "KORIDOR"
+        // ARIKLASS -> seat.type.equals("Business")
+        // AKEN -> seat.seat == 1 || seat.seat == 6
+        // KORIDOR -> seat.seat == 3 || seat.seat == 4
+        // Lennnufirma huvides on vaikimisi eelistus istutada kõik võimalikult ette
 
+        if (pref.equals("ARIKLASS")) {
+            List<List<SeatDTO>> modifiedBusinessSeats = getBusinessSeats(seatBlocks.subList(0,2), passengers);
+            List<List<SeatDTO>> unchangedEconomy = seatBlocks.subList(2, seatBlocks.size());
+            List<List<SeatDTO>> finalSeatArrangement = new ArrayList<>();
+            finalSeatArrangement.addAll(modifiedBusinessSeats);
+            finalSeatArrangement.addAll(unchangedEconomy);
+
+            return finalSeatArrangement;
+        }
+        else {
+            if (pref.equals("AKEN")) {
+                return getWindowSeats(seatBlocks.subList(2, seatBlocks.size()), passengers);
+            }
+
+            if (pref.equals("KORIDOR")) {
+                return getIsleSeats(seatBlocks.subList(2, seatBlocks.size()), passengers);
+            }
+        }
+
+
+
+
+
+
+        return null;
+    }
+
+
+    private List<List<SeatDTO>> getBusinessSeats(List<List<SeatDTO>> blocks, int passengers) {
+        List<List<SeatDTO>> suggestions = new ArrayList<>();
+
+
+        for (List<SeatDTO> block : blocks) {
+            List<SeatDTO> modifiedBlock = new ArrayList<>(block);
+
+            List<SeatDTO> availableSeats = modifiedBlock.stream()
+                    .filter(SeatDTO::isAvailable)
+                    .sorted(Comparator.comparing(SeatDTO::getRow))
+                    .collect(Collectors.toList());
+
+
+            /*for (SeatDTO seat : availableSeats) {
+                System.out.println(seat.getRow() + seat.getSeat());
+            }*/
+
+            int seatsToMark = Math.min(passengers, availableSeats.size());
+            for (int i = 0; i < seatsToMark; i++) {
+                availableSeats.get(i).setPreferred(true);
+            }
+
+            suggestions.add(modifiedBlock);
+        }
+
+        return suggestions;
+    }
+
+    private List<List<SeatDTO>> getWindowSeats(List<List<SeatDTO>> blocks, int passengers) {
+        return null;
+    }
+
+    private List<List<SeatDTO>> getIsleSeats(List<List<SeatDTO>> blocks, int passengers) {
+        return null;
+    }
 
 
 

@@ -1,8 +1,8 @@
 package org.example.lennuplaneerija.controller;
 
 import org.example.lennuplaneerija.dto.FlightDTO;
+import org.example.lennuplaneerija.dto.FlightRequestDTO;
 import org.example.lennuplaneerija.dto.FlightResponseDTO;
-import org.example.lennuplaneerija.dto.RequestDTO;
 import org.example.lennuplaneerija.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +39,7 @@ public class FlightController {
     }
 
     @PostMapping("/flights/filter")
-    public List<FlightDTO> filterFlights(@RequestBody RequestDTO request) {
+    public List<FlightDTO> filterFlights(@RequestBody FlightRequestDTO request) {
         List<FlightDTO> filtered = flightService.filterByDate(request.getFlights(), request.getDate());
         return flightService.filterByPriceRange(filtered, request.getPriceRange());
     }

@@ -5,6 +5,7 @@ public class SeatDTO {
     private int seat;
     private String type; // Economy, business
     private boolean available;
+    private boolean preferred = false;
 
     public SeatDTO() {
     }
@@ -39,5 +40,13 @@ public class SeatDTO {
 
     public boolean isAvailable() {
         return available;
+    }
+
+    public void setPreferred(boolean preferred) {
+        this.preferred = preferred;
+    }
+
+    public boolean isPreferred() {
+        return preferred;
     }
 }
