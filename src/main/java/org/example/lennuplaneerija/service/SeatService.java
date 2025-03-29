@@ -90,7 +90,7 @@ public class SeatService {
     }
 
     private boolean isSeatAvailable() {
-        return random.nextDouble() > 0.1;
+        return random.nextDouble() > 0.3;
     }
 
     public List<List<SeatDTO>> fetchSeatSelection(List<List<SeatDTO>> seatBlocks, String pref, int passengers) {
@@ -98,7 +98,8 @@ public class SeatService {
         // ARIKLASS -> seat.type.equals("Business")
         // AKEN -> seat.seat == 1 || seat.seat == 6
         // KORIDOR -> seat.seat == 3 || seat.seat == 4
-        // Lennnufirma huvides on vaikimisi eelistus istutada kõik võimalikult ette
+        // Lennnufirma huvides on vaikimisi eelistus istutada kõik võimalikult ette, täites ühe bloki korraga
+        // Eelistus tähendab, et vähemalt 1 kohtadest on selle eelistuga arvestanud (juhul, kui on piisavalt kohti)
 
         if (pref.equals("ARIKLASS")) {
             List<List<SeatDTO>> modifiedBusinessSeats = getBusinessSeats(seatBlocks.subList(0,2), passengers);
@@ -110,59 +111,80 @@ public class SeatService {
             return finalSeatArrangement;
         }
         else {
-            if (pref.equals("AKEN")) {
-                return getWindowSeats(seatBlocks.subList(2, seatBlocks.size()), passengers);
-            }
+            List<List<SeatDTO>> modifiedEconomySeats = getEconomySeats(seatBlocks.subList(2, seatBlocks.size()), passengers, pref);
+            List<List<SeatDTO>> unchangedBusiness = seatBlocks.subList(0,2);
+            List<List<SeatDTO>> finalSeatArrangement = new ArrayList<>();
+            finalSeatArrangement.addAll(unchangedBusiness);
+            finalSeatArrangement.addAll(modifiedEconomySeats);
 
-            if (pref.equals("KORIDOR")) {
-                return getIsleSeats(seatBlocks.subList(2, seatBlocks.size()), passengers);
-            }
+            return finalSeatArrangement;
         }
-
-
-
-
-
-
-        return null;
     }
 
 
     private List<List<SeatDTO>> getBusinessSeats(List<List<SeatDTO>> blocks, int passengers) {
-        List<List<SeatDTO>> suggestions = new ArrayList<>();
-
+        int assignedCount = 0;
 
         for (List<SeatDTO> block : blocks) {
-            List<SeatDTO> modifiedBlock = new ArrayList<>(block);
-
-            List<SeatDTO> availableSeats = modifiedBlock.stream()
+            List<SeatDTO> availableSeats = block.stream()
                     .filter(SeatDTO::isAvailable)
                     .sorted(Comparator.comparing(SeatDTO::getRow))
-                    .collect(Collectors.toList());
+                    .toList();
 
-
-            /*for (SeatDTO seat : availableSeats) {
-                System.out.println(seat.getRow() + seat.getSeat());
-            }*/
-
-            int seatsToMark = Math.min(passengers, availableSeats.size());
-            for (int i = 0; i < seatsToMark; i++) {
-                availableSeats.get(i).setPreferred(true);
+            for (SeatDTO seat : availableSeats) {
+                if (assignedCount < passengers) {
+                    seat.setPreferred(true);
+                    assignedCount++;
+                } else {
+                    break;
+                }
             }
 
-            suggestions.add(modifiedBlock);
+            if (assignedCount >= passengers) break;
         }
 
-        return suggestions;
+        return blocks;
     }
 
-    private List<List<SeatDTO>> getWindowSeats(List<List<SeatDTO>> blocks, int passengers) {
-        return null;
+
+    private List<List<SeatDTO>> getEconomySeats(List<List<SeatDTO>> blocks, int passengers, String pref) {
+        int assignedCount = 0;
+        SeatDTO firstPreferredSeat = null;
+        List<SeatDTO> allAvailableSeats = new ArrayList<>();
+
+        for (List<SeatDTO> block : blocks) {
+            for (SeatDTO seat : block) {
+                if (seat.isAvailable()) {
+                    if (firstPreferredSeat == null) {
+                        if (pref.equals("AKEN") && (seat.getSeat() == 1 || seat.getSeat() == 6)) {
+                            firstPreferredSeat = seat;
+                        } else if (pref.equals("KORIDOR") && (seat.getSeat() == 3 || seat.getSeat() == 4)) {
+                            firstPreferredSeat = seat;
+                        }
+                    }
+                    allAvailableSeats.add(seat);
+                }
+            }
+        }
+
+        if (firstPreferredSeat != null) {
+            firstPreferredSeat.setPreferred(true);
+            assignedCount++;
+            allAvailableSeats.remove(firstPreferredSeat);
+        }
+
+        for (SeatDTO seat : allAvailableSeats) {
+            if (assignedCount < passengers) {
+                seat.setPreferred(true);
+                assignedCount++;
+            } else {
+                break;
+            }
+        }
+
+        return blocks;
     }
 
-    private List<List<SeatDTO>> getIsleSeats(List<List<SeatDTO>> blocks, int passengers) {
-        return null;
-    }
 
 
 
