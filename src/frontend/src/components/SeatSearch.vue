@@ -34,9 +34,10 @@
         </option>
       </select>
 
-
-
+      <button @click="buyTickets" class="otsi">OSTA</button>
     </div>
+
+
 
   </div>
 
@@ -56,7 +57,7 @@ export default {
       error: "",
       pref: "",
       prefChoices: ["ARIKLASS", "AKEN", "KORIDOR"],
-
+      bought: false,
     };
   },
   computed: {
@@ -125,6 +126,22 @@ export default {
       return this.selectedSeats.some(s =>
           s.row === seat.row && s.seat === seat.seat
       );
+    },
+
+    async buyTickets() {
+      if (this.selectedSeats.length < this.passengerCount) {
+        alert(`!Palun valige vähemalt ${this.passengerCount} ${this.passengerCount === 1 ? 'istekoht' : 'istekohta'}!`);
+      }
+
+      if (this.selectedSeats.length === this.passengerCount) {
+        alert(`Ost edukalt lõpetatud:
+         - ${this.flight.departure} | ${this.flight.origin} → ${this.flight.destination}
+         - Firma: ${this.flight.airline}
+         - Piletid: ${this.passengerCount}
+         - Summa: ${this.passengerCount * this.flight.price} eurot
+         `)
+      }
+
     }
 
   },
@@ -223,6 +240,20 @@ export default {
 .seat.selected {
   background-color: #00ff92 !important;
   color: black !important;
+}
+
+.otsi {
+  background: none;
+  color: #00FF92;
+  font-size: 3vw;
+  margin-top: 21vw;
+  border: #00ff92 1px solid;
+  border-radius: 1vw;
+  padding: 1vw;
+}
+
+.otsi:hover {
+  color: white;
 }
 
 
