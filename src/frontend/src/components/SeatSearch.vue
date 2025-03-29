@@ -2,8 +2,18 @@
   <div class="container">
 
     <div class="grid-container">
-      <div v-for="(block, index) in seats" :key="index" class="block">
-        <div v-for="seat in block" :key="seat.row + seat.seat" class="seat" :class="{ available: seat.available }">
+      <div v-for="(block, index) in displayedSeats" :key="index" class="block">
+        <div
+            v-for="seat in block"
+            :key="seat.row + seat.seat"
+            class="seat"
+            :class="{
+            available: seat.available,
+            preferred: seat.preferred,
+            selected: isSeatSelected(seat)
+          }"
+            @click="toggleSeatSelection(seat)"
+        >
           {{ seat.row }}{{ seat.seat }}
         </div>
       </div>
@@ -18,8 +28,7 @@
 
       <h1 class="pref-header">EELISTUS:</h1>
 
-      <select v-model="pref" @change="fetchFlightsWithFilters" class="filter-select">
-        <option value="">KORVUTI</option>
+      <select v-model="pref" @change="fetchSeatSelection" class="filter-select">
         <option v-for="pref in prefChoices" :key="pref" :value="pref">
           {{ pref }}
         </option>
@@ -42,13 +51,20 @@ export default {
   data() {
     return {
       seats: [],
+      preferredSeats: [],
+      selectedSeats: [],
       error: "",
       pref: "",
       prefChoices: ["ARIKLASS", "AKEN", "KORIDOR"],
 
     };
   },
-  props: {
+  computed: {
+    displayedSeats() {
+      return this.preferredSeats.length > 0 ? this.preferredSeats : this.seats;
+    },
+  },
+    props: {
     flight: Object,
     passengerCount: Number,
   },
@@ -59,8 +75,6 @@ export default {
       try {
 
         const response = await axios.get("http://localhost:9090/api/seats");
-
-        console.log(response.data);
         this.seats = response.data;
 
       } catch (err) {
@@ -68,6 +82,51 @@ export default {
         console.error("API Error:", err);
       }
     },
+
+    async fetchSeatSelection() {
+      try {
+        const response = await axios.post("http://localhost:9090/api/seats/filter", {
+          seats: this.seats,
+          passengers: this.passengerCount,
+          preference: this.pref,
+        });
+
+        console.log(response.data);
+
+        this.preferredSeats = response.data;
+        this.selectedSeats = [];
+
+      } catch (err) {
+        this.error = "Failed to fetch filtered seats. Please try again later.";
+        console.error("API Error:", err);
+      }
+    },
+
+
+    // MEETODI AITAS LUUA CHATGPT
+    toggleSeatSelection(seat) {
+      if (!seat.available) return;
+
+      const index = this.selectedSeats.findIndex(s =>
+          s.row === seat.row && s.seat === seat.seat
+      );
+
+      if (index === -1) {
+        if (this.selectedSeats.length < this.passengerCount) {
+          this.selectedSeats.push(seat);
+        }
+      } else {
+        this.selectedSeats.splice(index, 1);
+      }
+    },
+
+    // MEETODI AITAS LUUA CHATGPT
+    isSeatSelected(seat) {
+      return this.selectedSeats.some(s =>
+          s.row === seat.row && s.seat === seat.seat
+      );
+    }
+
   },
   mounted() {
     this.searchSeats();
@@ -116,6 +175,7 @@ export default {
 .seat.available {
   background: black;
   border: #00ff92 2px solid;
+  cursor: pointer;
 }
 
 .seat:not(.available) {
@@ -153,6 +213,16 @@ export default {
   font-size: 3vw;
   -webkit-text-stroke: 1px #00ff92;
   color: black;
+}
+
+.seat.preferred {
+  border: #ffbd36 1px dashed !important;
+  color: #ffbd36 !important;
+}
+
+.seat.selected {
+  background-color: #00ff92 !important;
+  color: black !important;
 }
 
 
