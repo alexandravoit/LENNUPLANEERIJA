@@ -2,15 +2,20 @@
 ![SWAGTRAVEL](https://github.com/user-attachments/assets/61dfcc88-b51c-4428-b2cb-37c6bd7f6fcf)
 
 ## KÄIVITAMINE
+* **VAJALIK: node.js (tõmba @ nodejs.org), axios**
 * Backend:
-    1. Liigu kausta src/main/java/org/example/lennuplaneerija/
-    2. Käivita LennuplaneerijaApplication.java IDE kaudu
-    3. **VÕI**, olles projektikaustas (LENNUPLANEERIJA), jooksuta käsku `./gradlew bootRun`
+    1. Olles projektikaustas (LENNUPLANEERIJA), jooksuta käsku `./gradlew bootRun`
+    2. **VÕI**, IDEs Liigu kausta src/main/java/org/example/lennuplaneerija/
+    3. Käivita LennuplaneerijaApplication.java
+
       
  * Frontend:
-    1. Olles projektikaustas (LENNUPLANEERIJA) liigu käsurea kaudu kasuta "frontend" `cd src/frontend`
-    2. Käivita frontend käsuga `npm run serve`
-    3. **NB! Vajadusel tõmba alla puuduvaid pakette (jälgi käsurea teavitusi)**
+    1. Olles projektikaustas (LENNUPLANEERIJA) liigu käsurea kaudu kausta "frontend" `cd src/frontend`
+    2. Jooksuta `npm install`
+    3. Jooksuta `npm install axios`
+    4. Käivita frontend käsuga `npm run serve`
+  
+Veebileht peaks jooksma aadressil http://localhost:8080/
 
 ## TAGASIVAADE TEHTUD TÖÖLE
 
