@@ -1,5 +1,6 @@
 # SWAGTRAVEL: super optimaalne lennureisi planeerimisportaal
 ![SWAGTRAVEL](https://github.com/user-attachments/assets/61dfcc88-b51c-4428-b2cb-37c6bd7f6fcf)
+Demo video veebilehest: https://drive.google.com/file/d/112m3OtSbt1B1hHZWQBtbPwTCiYgePsA8/view?usp=sharing
 
 ## KÄIVITAMINE
 * **VAJALIK: node.js (tõmba @ nodejs.org), axios**
